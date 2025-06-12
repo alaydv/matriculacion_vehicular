@@ -11,7 +11,7 @@ set(CMAKE_C_STANDARD 11)
 include_directories(header)
 
 # Directorio en el que se encuentran los archivos .cpp o .c
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB SOURCES "src/*.c")
 
 # Crear el ejecutable
 add_executable(matriculacion_vehicular ${SOURCES})
