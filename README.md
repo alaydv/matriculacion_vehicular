@@ -1,47 +1,76 @@
-# Editor Markdown
+# Avance del Proyecto: Sistema Integral de Matriculación Vehicular
 
-Editor Markdown es un editor online que se ejecuta en tu navegador y que funciona tanto con tus archivos locales como con varios servicios de almacenamiento cloud.
+## Semanas 2 a 3
 
-## Markdown
+### Introducción
 
-Markdown es un lenguaje de marcado que permite redactar cualquier tipo de documento sin depender del formato aplicado por ciertos editores en concreto. 
+Durante las semanas 2 y 3 se han logrado importantes avances en el desarrollo del sistema de matriculación vehicular, aplicando metodología ágil **Scrum** y una planificación basada en objetivos SMART. A continuación, se detallan los entregables alcanzados, los roles del equipo, y cómo se alinearon las tareas con la **matriz RACI**.
 
-Lo único que necesitarás para abrir un documento Markdown es un editor de texto plano.
+---
 
-El lenguaje Markdown fue creado por [John Gruber](https://daringfireball.net).
+## Roles Asignados
 
-## Cómo usar el editor
+| Nombre           | Rol           | Función principal |
+|------------------|----------------|--------------------|
+| **Alay Erick**   | Líder / Scrum Master | Coordinación general, facilitación de reuniones, seguimiento de entregables |
+| **Amanta David** | Tester         | Validación de funcionalidades, pruebas manuales |
+| **Delgado Claris** | Programador 1 | Desarrollo de funciones clave del sistema |
+| **Duran John**   | Programador 2 | Apoyo en codificación y estructuración del sistema |
 
-Para utilizar Editor Markdown, redacta tu documento usando la sintaxis Markdown en el panel de la izquierda. Puedes ver la representación final HTML en tiempo real en el panel de la derecha.
+---
 
-Actualmente, Editor Markdown es compatible con:
+## Objetivos SMART Relacionados
 
-* GitHub
-* Dropbox
-* Bitbucket
+- **Específico**: Desarrollar funciones para registro vehicular, lectura de datos y persistencia.
+- **Medible**: Implementar funcionalidades con archivos `.txt`, registrar vehículos con datos válidos.
+- **Alcanzable**: Distribución clara de tareas por rol, uso de GitHub y README básico.
+- **Relevante**: Aplicación directa de estructuras, archivos y buenas prácticas de código.
+- **Temporal**: Sprint con duración de 2 semanas, desde la planificación hasta la revisión.
 
-Desde Editor Markdown también puedes redactar artículos en Medium.
+---
 
-Actualmente puedes exportar tus archivos a estos formatos:
+## Entregables por Semana
 
-* PDF
-* HTML
-* Markdown
+### Semana 2 - Sprint 1
 
-## Tutoriales de Markdown
+- Registro de vehículos (datos: placa, cédula, año, tipo, avalúo)
+- Guardado en archivo `.txt`
+- Lectura de datos al iniciar el programa
+- Repositorio en GitHub con ramas y commits iniciales
+- Estructura básica del archivo `README.md`
 
-Para aprender a usar Markdown puedes consultar los siguientes tutoriales:
+### Semana 3 - Avance de Sprint 2 (parcial)
 
-[Tutorial de Tutorial Markdown](https://tutorialmarkdown.com)
-[Guía definitiva de Markdown](https://neoguias.com/markdown)
+- Implementación inicial de la función para cálculo de matrícula
+- Diseño preliminar de las reglas de negocio (multas, recargos, descuentos)
+- Avances en validaciones de entrada
+- Inicio de desarrollo de búsqueda por placa
+- Mejora de documentación técnica en el `README.md`
 
-Si te gusta **Editor Markdown** y quieres publicar tu tutorial en esta lista, envía un mensaje a edu@edulazaro.com con tu nombre, el nombre del tutorial y la URL del tutorial.
+---
 
-## Novedades
+## Matriz RACI Aplicada
 
-Novedades de la última versión:
+| Actividad                       | Responsable (R)     | Aprobador (A)      | Consultado (C)       | Informado (I)        |
+|--------------------------------|----------------------|---------------------|------------------------|-----------------------|
+| Registro de vehículos          | Claris, John         | Erick               | David (pruebas)        | Todos                 |
+| Guardado en archivo            | John                 | Erick               | Claris (estructura)    | Todos                 |
+| Lectura desde archivo          | Claris               | Erick               | David (validación)     | Todos                 |
+| Validaciones y entrada         | David                | Erick               | Claris, John           | Todos                 |
+| Revisión de repositorio GitHub | Erick                | Erick               | Todos                  | Todos                 |
+| README inicial y mejoras       | Erick, Claris        | Erick               | Todos                  | Todos                 |
 
-* Puedes arrastrar y soltar documentos Markdown o archivos HTML en el editor.
-* También puedes incluir imágenes, aunque para ello deberás inlazar tu cuente de Dropbox.
+---
 
+## Herramientas Utilizadas
 
+- **Lenguaje**: C
+- **Control de versiones**: Git / GitHub
+- **Metodología**: Scrum
+- **Documentación**: Markdown (`README.md`), videos y archivos `.txt`
+
+---
+
+## Conclusión
+
+El equipo ha cumplido con éxito los entregables planeados hasta la semana 3, sentando una base sólida para las funcionalidades más complejas que vendrán en los siguientes sprints. Se ha trabajado de manera colaborativa y organizada, apoyándose en la matriz RACI y la planificación ágil.
