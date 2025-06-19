@@ -10,10 +10,11 @@ void mostrarMenu() {
 	printf("\n\t-- MENU DE MATRICULACION VEHICULAR --\n");
 	printf("1. Registrar nuevo vehículo\n");
 	printf("2. Buscar vehículo por placa\n");
-	printf("3. Listar vehículos matriculados\n");
-	printf("4. Generar comprobante\n");
-	printf("5. Empezar proceso de matriculación\n");
-	printf("6. Salir\n");
+	printf("3. Listar todos los vehículos\n");
+	printf("4. Listar los vehículos matriculados\n");
+	printf("5. Generar comprobante\n");
+	printf("6. Empezar proceso de matriculación\n");
+	printf("7. Salir\n");
 	printf("Seleccione una opción: ");
 }
 
@@ -46,19 +47,22 @@ int main() {
 			break;
 			
 		case 4:
-			generarComprobante();
+			listarVehiculosMatriculados();
 			break;	
 		case 5:
-			printf("");
+			generarComprobante();
 			break;
 		case 6:
+			procesoMatriculacion(vehiculos, contador);
+			break;
+		case 7:
 			printf("Saliendo......... Gracias!\n");
 			break;
 		default:
 			printf("Opción no válida, por favor intente de nuevo.\n");
 		}
 		
-	} while (opcion != 5);
+	} while (opcion != 7);
 	
 	return 0;
 }
