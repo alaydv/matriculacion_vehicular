@@ -2,8 +2,8 @@
 #define MATRICULACIONVEHICULAR_H
 
 typedef struct {
-    char placa[50];
-    char cedula[40];
+    char placa[10];
+    char cedula[12];
     char tipo[50];
     int anio;
     float avaluo;
@@ -11,7 +11,7 @@ typedef struct {
 
 Vehiculo registroVehiculo();
 void buscarVehiculoPorPlaca(const char *placaBuscar);
-void listarVehiculos();
+void listarVehiculos(Vehiculo vehiculos[], int totalVehiculos);
 void generarComprobante();
 
 #endif

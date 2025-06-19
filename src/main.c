@@ -1,4 +1,4 @@
-// Declaraci� de bibliotecas y constantes
+// Declaración de bibliotecas y constantes
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -8,28 +8,28 @@
 // Se muestra al usuario el men
 void mostrarMenu() {
 	printf("\n\t-- MENU DE MATRICULACION VEHICULAR --\n");
-	printf("1. Registrar nuevo vehiulo\n");
-	printf("2. Buscar vehiulo por placa\n");
-	printf("3. Listar vehiulos matriculados\n");
+	printf("1. Registrar nuevo vehículo\n");
+	printf("2. Buscar vehículo por placa\n");
+	printf("3. Listar vehículos matriculados\n");
 	printf("4. Generar comprobante\n");
-	printf("5. Salir\n");
+	printf("5. Empezar proceso de matriculación\n");
+	printf("6. Salir\n");
 	printf("Seleccione una opción: ");
 }
 
 //Función principal
 int main() {
-	Vehiculo arr[MAX_USERS];
+	Vehiculo vehiculos[MAX_USERS];
 	int opcion, contador = 0;
 	
 	do {
 		mostrarMenu();
 		scanf("%d", &opcion);
-		getchar();
-		
+		while (getchar() != '\n');
 		switch (opcion) {
 		case 1: {
 			Vehiculo v = registroVehiculo();
-            arr[contador++] = v;
+            vehiculos[contador++] = v;
             printf("\nVehiculo registrado exitosamente.\n");
             break;
 		}
@@ -42,17 +42,18 @@ int main() {
 			break;
 		}
 		case 3:
-			listarVehiculos();
+			listarVehiculos(vehiculos, contador);
 			break;
 			
 		case 4:
 			generarComprobante();
-			break;
-			
+			break;	
 		case 5:
+			printf("");
+			break;
+		case 6:
 			printf("Saliendo......... Gracias!\n");
 			break;
-			
 		default:
 			printf("Opción no válida, por favor intente de nuevo.\n");
 		}
