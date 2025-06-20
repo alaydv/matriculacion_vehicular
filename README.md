@@ -1,6 +1,6 @@
 # Avance del Proyecto: Sistema Integral de Matriculación Vehicular
 
-## Semanas 2 a 3
+## Semanas 4 a 5
 
 ### Introducción
 
@@ -71,6 +71,3 @@ Durante las semanas 2 y 3 se han logrado importantes avances en el desarrollo de
 
 ---
 
-## Conclusión
-
-El equipo ha cumplido con éxito los entregables planeados hasta la semana 3, sentando una base sólida para las funcionalidades más complejas que vendrán en los siguientes sprints. Se ha trabajado de manera colaborativa y organizada, apoyándose en la matriz RACI y la planificación ágil.
