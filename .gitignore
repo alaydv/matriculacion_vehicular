@@ -64,3 +64,4 @@ CMakeUserPresets.json
 
 # binary files
 /build
+/.cache

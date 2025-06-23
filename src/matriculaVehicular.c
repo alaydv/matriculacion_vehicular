@@ -1,5 +1,6 @@
 
 #include "matriculaVehicular.h"
+#include "utilidades.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -22,9 +23,7 @@ void listarVehiculos(Vehiculo vehiculos[], int totalVehiculos){
     	    printf("*******************************************\n");
         }
     }
-    printf("Presiona enter para continuar ...\n");
-    getchar();
-
+    mensajeSalida();
 }
 
 float verificarMultas(){
@@ -121,7 +120,7 @@ int revision() {
 void procesoMatriculacion(Vehiculo vehiculos[], int totalVehiculos){
 
     float multa;
-    int aprovacionRevision;
+    int aprobacionRevision;
     for (int i = 0; i < totalVehiculos; i++)
     {
     multa = verificarMultas();
@@ -130,21 +129,18 @@ void procesoMatriculacion(Vehiculo vehiculos[], int totalVehiculos){
     {
         vehiculos[i].multas = multa;
         printf("No puedes proceder con la revisión tienes una multa de: %.2f\n", multa);
-        printf("Presiona enter para continuar....\n");
-        getchar();
+        mensajeSalida();
     }else{
         vehiculos[i].multas = multa;
-        aprovacionRevision = revision();
-        if (aprovacionRevision == 1){
-            vehiculos[i].estaMatriculado = aprovacionRevision;
+        aprobacionRevision = revision();
+        if (aprobacionRevision == 1){
+            vehiculos[i].estaMatriculado = aprobacionRevision;
             printf("Operación concluida, su vehículo ha sido matriculado\n");
-            getchar();
-            printf("presione enter para continuar...\n");
+            mensajeSalida();
         }else{
-            vehiculos[i].estaMatriculado = aprovacionRevision;
+            vehiculos[i].estaMatriculado = aprobacionRevision;
             printf("Operación concluida, su vehículo no ha sido matriculado\n");
-            getchar();
-            printf("presione enter para continuar...\n");
+            mensajeSalida();
         }
         
     }
@@ -216,7 +212,7 @@ Vehiculo registroVehiculo() {
             v.anio = 0;
             printf("Error:Ingrese un valor correcto.\n");
         }
-    } while (v.anio < 1950);
+    } while (v.anio < 1950 && v.anio > 2025);
     getchar();
 
     // Leer avalúo con validación positiva

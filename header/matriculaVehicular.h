@@ -15,7 +15,6 @@ Vehiculo registroVehiculo();
 void buscarVehiculoPorPlaca(const char *placaBuscar);
 void listarVehiculos(Vehiculo vehiculos[], int totalVehiculos);
 void generarComprobante();
-float verificarMultas();
 void listarVehiculosMatriculados();
 void procesoMatriculacion(Vehiculo vehiculos[], int totalVehiculos);
 
