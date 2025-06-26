@@ -16,8 +16,8 @@ void listarVehiculos(Vehiculo vehiculos[], int totalVehiculos){
         for (int i = 0; i < totalVehiculos; i++)
         {
             printf("\nVehículo número %d \n", i + 1);
-	        printf("Placa del vehículo: %s", vehiculos[i].placa);
-	        printf("Cédula del propietario: %s", vehiculos[i].cedula);
+	        printf("Placa del vehículo: %s\n", vehiculos[i].placa);
+	        printf("Cédula del propietario: %s\n", vehiculos[i].cedula);
 	        printf("Tipo del vehículo: %s \n", vehiculos[i].tipo);
         	printf("Año del vehículo: %d \n", vehiculos[i].anio);
 	        printf("Avaluo del vehículo: %.2f \n", vehiculos[i].avaluo);
@@ -71,7 +71,7 @@ float verificarMultas(){
             } while (opcion != 5);
             return multa;
         }
-    } while (tieneMultas != 0 || tieneMultas !=1);
+    } while (tieneMultas != 0 && tieneMultas != 1);
     
 }
 
@@ -85,31 +85,33 @@ void buscarVehiculoPorPlaca(Vehiculo vehiculos[], int totalVehiculos){
     {
         printf("Actualmente no hay ningún vehículo registrado \n");
         mensajeSalida();
-    } else {
-    char placaBuscar[8];
-    do
-    {
+    }else{
+    char placaBuscar[9]; // AAA-1234 + '\0'
+    do {
         printf("Ingrese la placa del vehículo:\n");
-        scanf("%s", &placaBuscar);
-        while(getchar() != '\n');
-    } while (validarPlaca(placaBuscar) != 0);
+        scanf("%8s", placaBuscar); // sin & porque ya es un arreglo
+        aMayusculas(placaBuscar);
+        while (getchar() != '\n'); // limpia el buffer
+    } while (validarPlaca(placaBuscar) != 1); // válida solo si regresa 1
 
-        for (int i = 0; i < totalVehiculos; i++)
-        {
-            if (vehiculos[i].placa == placaBuscar){
-                printf("Vehículo #%d, encontrado...", i);
-                printf("Placa del vehículo: %s", vehiculos[i].placa);
-                printf("Cédula del propietario: %s", vehiculos[i].cedula);
-                printf("Tipo del vehículo: %s \n", vehiculos[i].tipo);
-                printf("Año del vehículo: %d \n", vehiculos[i].anio);
-                printf("Avaluo del vehículo: %.2f \n", vehiculos[i].avaluo);
-                printf("*******************************************\n");
-                mensajeSalida();
-            }else{
-                printf("El vehículo con placa %s, no existe", placaBuscar);
-                mensajeSalida();
-            }
+    int encontrado = 0;
+    for (int i = 0; i < totalVehiculos; i++) {
+        if (strcmp(vehiculos[i].placa, placaBuscar) == 0) {
+            printf("Vehículo #%d encontrado...\n", i + 1);
+            printf("Placa del vehículo: %s\n", vehiculos[i].placa);
+            printf("Cédula del propietario: %s\n", vehiculos[i].cedula);
+            printf("Tipo del vehículo: %s\n", vehiculos[i].tipo);
+            printf("Año del vehículo: %d\n", vehiculos[i].anio);
+            printf("Avaluo del vehículo: %.2f\n", vehiculos[i].avaluo);
+            printf("*******************************************\n");
+            encontrado = 1;
+            mensajeSalida();
         }
+    }
+    if (encontrado != 1) {
+        printf("El vehículo con placa %s no existe.\n", placaBuscar);
+        mensajeSalida();
+    }
     }
 }
 
@@ -196,7 +198,7 @@ Vehiculo registroVehiculo() {
     {
         printf("Ingrese la placa del vehículo:\n");
         fgets(v.placa, sizeof(v.placa), stdin);
-        limpiarSaltoLinea(v.placa);
+        //limpiarSaltoLinea(v.placa);
     } while (validarPlaca(v.placa) != 0);
 
     // Leer cédula
@@ -228,12 +230,12 @@ Vehiculo registroVehiculo() {
             case 1:
                 strcpy(v.tipo, "Liviano");
                 // Asignar recargo según el tipo de vehículo
-                v.recargo = 5.0;
+                v.recargoTipo = 5.0;
                 break;
             case 2:
                 strcpy(v.tipo, "Pesado");
                 // Asignar recargo según el tipo de vehículo
-                v.recargo = 15.0;
+                v.recargoTipo = 15.0;
                 break;
             default:
                 printf("Opción no válida. Intente de nuevo.\n");
@@ -264,6 +266,7 @@ Vehiculo registroVehiculo() {
     } while (v.avaluo <= 0);
     getchar();
 	
+    // Región a la que pertenece el vehículo.
     int region;
     int resultadoRegion;
     float recargoRegion = 0.0f;
@@ -271,26 +274,26 @@ do {
 	printf("Seleccione la region de la que proviene:\n");
 	printf("1. Costa\n");
 	printf("2. Sierra\n");
-	printf("2. Oriente/Galápagos\n");
+	printf("3. Oriente/Galápagos\n");
 	printf("Opción: ");
 	resultadoRegion = scanf("%d", &region);
 	getchar();  
 					
 	if (resultadoRegion != 1 || (region != 1 && region!= 2 &&region!=3)) {
-	printf("? Entrada inválida. Intente de nuevo.\n");
+	printf("Entrada inválida: Intente de nuevo.\n");
 	}
 					
 	} while (region != 1 && region != 2 &&region!=3);
 // Asignar recargo según la región	
 switch (region) {
         case 1:
-            recargoRegion = 10.0f;
+            v.recargoRegion = 10.0f;
             break;
         case 2:
-            recargoRegion = 0.0f;
+            v.recargoRegion = 0.0f;
             break;
         case 3:
-            recargoRegion = 5.0f;
+            v.recargoRegion = 5.0f;
             break;
     }
     return v;

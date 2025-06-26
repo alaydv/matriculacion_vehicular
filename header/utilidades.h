@@ -4,5 +4,6 @@
 void limpiarPantalla();
 void mensajeSalida();
 void limpiarSaltoLinea(char *cadena);
+void aMayusculas(char *cadena);
 
 #endif

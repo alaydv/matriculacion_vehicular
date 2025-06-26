@@ -52,9 +52,11 @@ int main() {
 			procesoMatriculacion(vehiculos, contador);
 			break;	
 		case 5:
+			limpiarPantalla();
 			listarVehiculosMatriculados(vehiculos, contador);
 			break;
 		case 6:
+			limpiarPantalla();
 			generarComprobante();
 			break;
 		case 7:
