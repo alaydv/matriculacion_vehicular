@@ -198,7 +198,7 @@ Vehiculo registroVehiculo() {
     {
         printf("Ingrese la placa del vehículo:\n");
         fgets(v.placa, sizeof(v.placa), stdin);
-        //limpiarSaltoLinea(v.placa);
+        
     } while (validarPlaca(v.placa) != 0);
 
     // Leer cédula
