@@ -39,11 +39,7 @@ int main() {
 		}
 		case 2: {
 			limpiarPantalla();
-			char placaBuscar[10];
-			printf("Ingrese la placa a buscar:\n");
-			fgets(placaBuscar, sizeof(placaBuscar), stdin);
-			placaBuscar[strcspn(placaBuscar, "\n")] = '\0';
-			buscarVehiculoPorPlaca(placaBuscar);
+			buscarVehiculoPorPlaca(vehiculos, contador);
 			break;
 		}
 		case 3:
@@ -56,7 +52,7 @@ int main() {
 			procesoMatriculacion(vehiculos, contador);
 			break;	
 		case 5:
-			listarVehiculosMatriculados();
+			listarVehiculosMatriculados(vehiculos, contador);
 			break;
 		case 6:
 			generarComprobante();

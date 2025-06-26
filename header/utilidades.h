@@ -3,5 +3,6 @@
 
 void limpiarPantalla();
 void mensajeSalida();
+void limpiarSaltoLinea(char *cadena);
 
 #endif

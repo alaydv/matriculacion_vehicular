@@ -1,5 +1,6 @@
 
 #include "matriculaVehicular.h"
+#include "validaciones.h"
 #include "utilidades.h"
 #include <string.h>
 #include <stdio.h>
@@ -78,24 +79,36 @@ void generarComprobante(){
     printf("Proximamente..\n");
 }
 
-void buscarVehiculoPorPlaca(const char *placaBuscar){
-    printf("Proximamente..\n");
-}
+void buscarVehiculoPorPlaca(Vehiculo vehiculos[], int totalVehiculos){
+    
+    if (totalVehiculos == 0)
+    {
+        printf("Actualmente no hay ningún vehículo registrado \n");
+        mensajeSalida();
+    } else {
+    char placaBuscar[8];
+    do
+    {
+        printf("Ingrese la placa del vehículo:\n");
+        scanf("%s", &placaBuscar);
+        while(getchar() != '\n');
+    } while (validarPlaca(placaBuscar) != 0);
 
-// Función auxiliar para validar respuestas tipo 's' o 'n'
-int leerRespuestaSN(const char *pregunta) {
-    char respuesta[10];
-    while (1) {
-        printf("%s (s/n): ", pregunta);
-        fgets(respuesta, sizeof(respuesta), stdin);
-        respuesta[strcspn(respuesta, "\n")] = '\0';
-
-        if (strcmp(respuesta, "s") == 0 || strcmp(respuesta, "S") == 0) {
-            return 1; // Aprobado
-        } else if (strcmp(respuesta, "n") == 0 || strcmp(respuesta, "N") == 0) {
-            return 0; // No aprobado
-        } else {
-            printf("Entrada inválida. Por favor, ingrese solo 's' o 'n'.\n");
+        for (int i = 0; i < totalVehiculos; i++)
+        {
+            if (vehiculos[i].placa == placaBuscar){
+                printf("Vehículo #%d, encontrado...", i);
+                printf("Placa del vehículo: %s", vehiculos[i].placa);
+                printf("Cédula del propietario: %s", vehiculos[i].cedula);
+                printf("Tipo del vehículo: %s \n", vehiculos[i].tipo);
+                printf("Año del vehículo: %d \n", vehiculos[i].anio);
+                printf("Avaluo del vehículo: %.2f \n", vehiculos[i].avaluo);
+                printf("*******************************************\n");
+                mensajeSalida();
+            }else{
+                printf("El vehículo con placa %s, no existe", placaBuscar);
+                mensajeSalida();
+            }
         }
     }
 }
@@ -109,10 +122,10 @@ int revision() {
     int llantas = leerRespuestaSN("¿Las llantas están en buen estado?");
 
     if (frenos && luces && gases && llantas) {
-        printf("✔ Revisión técnica aprobada.\n");
+        printf("Revisión técnica aprobada.\n");
         return 1;
     } else {
-        printf("✘ Revisión técnica fallida.\n");
+        printf("Revisión técnica fallida.\n");
         return 0;
     }
 }
@@ -147,8 +160,27 @@ void procesoMatriculacion(Vehiculo vehiculos[], int totalVehiculos){
     }
 }
 
-void listarVehiculosMatriculados(){
-    printf("Prosimamente ...");
+void listarVehiculosMatriculados(Vehiculo vehiculos[], int totalVehiculos){
+    printf("\n\t-- Lista de todos los vehículos Matriculados--\n");
+    if (totalVehiculos == 0)
+    {
+        printf("Actualmente no hay ningún vehículo registrado \n");
+    } else {
+        for (int i = 0; i < totalVehiculos; i++)
+        {
+            if (vehiculos[i].estaMatriculado == 1)
+            {
+                printf("\nVehículo número %d \n", i + 1);
+                printf("Placa del vehículo: %s", vehiculos[i].placa);
+                printf("Cédula del propietario: %s", vehiculos[i].cedula);
+                printf("Tipo del vehículo: %s \n", vehiculos[i].tipo);
+                printf("Año del vehículo: %d \n", vehiculos[i].anio);
+                printf("Avaluo del vehículo: %.2f \n", vehiculos[i].avaluo);
+                printf("*******************************************\n");
+            }
+        }
+    }
+    mensajeSalida();
 }
 
 Vehiculo registroVehiculo() {
@@ -164,13 +196,16 @@ Vehiculo registroVehiculo() {
     {
         printf("Ingrese la placa del vehículo:\n");
         fgets(v.placa, sizeof(v.placa), stdin);
-    } while (strlen(v.placa) <= 7);
+        limpiarSaltoLinea(v.placa);
+    } while (validarPlaca(v.placa) != 0);
+
     // Leer cédula
     do
     {
         printf("Ingrese el número de cédula del propietario:\n");
         fgets(v.cedula, sizeof(v.cedula), stdin);
-    } while (strlen(v.cedula) != 10);
+        limpiarSaltoLinea(v.cedula);
+    } while (validarCedula(v.cedula) != 1);
 
     // Seleccionar tipo de vehículo con validación
     int opt;
@@ -212,7 +247,7 @@ Vehiculo registroVehiculo() {
             v.anio = 0;
             printf("Error:Ingrese un valor correcto.\n");
         }
-    } while (v.anio < 1950 && v.anio > 2025);
+    } while (v.anio < 1950 || v.anio > 2025);
     getchar();
 
     // Leer avalúo con validación positiva
