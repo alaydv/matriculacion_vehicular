@@ -196,9 +196,13 @@ Vehiculo registroVehiculo() {
         switch (opt) {
             case 1:
                 strcpy(v.tipo, "Liviano");
+                // Asignar recargo según el tipo de vehículo
+                v.recargo = 5.0;
                 break;
             case 2:
                 strcpy(v.tipo, "Pesado");
+                // Asignar recargo según el tipo de vehículo
+                v.recargo = 15.0;
                 break;
             default:
                 printf("Opción no válida. Intente de nuevo.\n");
@@ -208,13 +212,6 @@ Vehiculo registroVehiculo() {
     } while (opt < 1 || opt > 2);
     //getchar(); // Limpiar salto de línea pendiente
 	
-	  // Asignar recargo según el tipo de vehículo
- if (opt == 1) {
-        recargo = 5.0f;
-    } else if (opt == 2) {
-        recargo = 15.0f;
-    }
-
     // Leer año del vehículo con validación mínima
     do {
         printf("Ingrese el año del vehículo:\n");
