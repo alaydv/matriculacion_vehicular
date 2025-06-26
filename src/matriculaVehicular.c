@@ -207,6 +207,13 @@ Vehiculo registroVehiculo() {
 
     } while (opt < 1 || opt > 2);
     //getchar(); // Limpiar salto de línea pendiente
+	
+	  // Asignar recargo según el tipo de vehículo
+ if (opt == 1) {
+        recargo = 5.0f;
+    } else if (opt == 2) {
+        recargo = 15.0f;
+    }
 
     // Leer año del vehículo con validación mínima
     do {
@@ -228,6 +235,35 @@ Vehiculo registroVehiculo() {
         }
     } while (v.avaluo <= 0);
     getchar();
-
+	
+    int region;
+    int resultadoRegion;
+    float recargoRegion = 0.0f;
+do {
+	printf("Seleccione la region de la que proviene:\n");
+	printf("1. Costa\n");
+	printf("2. Sierra\n");
+	printf("2. Oriente/Galápagos\n");
+	printf("Opción: ");
+	resultadoRegion = scanf("%d", &region);
+	getchar();  
+					
+	if (resultadoRegion != 1 || (region != 1 && region!= 2 &&region!=3)) {
+	printf("? Entrada inválida. Intente de nuevo.\n");
+	}
+					
+	} while (region != 1 && region != 2 &&region!=3);
+// Asignar recargo según la región	
+switch (region) {
+        case 1:
+            recargoRegion = 10.0f;
+            break;
+        case 2:
+            recargoRegion = 0.0f;
+            break;
+        case 3:
+            recargoRegion = 5.0f;
+            break;
+    }
     return v;
 }
