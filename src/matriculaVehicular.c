@@ -281,6 +281,9 @@ Vehiculo registroVehiculo() {
         }
     } while (v.anio < 1950 || v.anio > 2025);
     getchar();
+	if (v.anio>2020){
+		v.recargoAnio= 15.0f;
+	}
 
     // Leer avalúo con validación positiva
     do {
