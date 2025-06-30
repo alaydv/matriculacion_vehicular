@@ -35,6 +35,7 @@ int main() {
 			Vehiculo v = registroVehiculo();
             vehiculos[contador++] = v;
             printf("\nVehiculo registrado exitosamente.\n");
+			mensajeSalida();
             break;
 		}
 		case 2: {

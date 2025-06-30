@@ -2,8 +2,8 @@
 #define MATRICULACIONVEHICULAR_H
 
 typedef struct {
-    char placa[8];
-    char cedula[12];
+    char placa[40];
+    char cedula[40];
     char tipo[20];
     int anio;
     float avaluo;

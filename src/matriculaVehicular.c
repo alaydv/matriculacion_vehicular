@@ -34,7 +34,7 @@ float verificarMultas(){
     do
     {
         printf("\n¿Tiene multas de tránsito? (1 = Sí, 0 = No): ");
-	    scanf("%d", &tieneMultas);
+        scanf("%d", &tieneMultas);
         if (tieneMultas == 0)
         {
             return multa;
@@ -79,40 +79,60 @@ void generarComprobante(){
     printf("Proximamente..\n");
 }
 
-void buscarVehiculoPorPlaca(Vehiculo vehiculos[], int totalVehiculos){
-    
-    if (totalVehiculos == 0)
-    {
-        printf("Actualmente no hay ningún vehículo registrado \n");
+void buscarVehiculoPorPlaca(Vehiculo vehiculos[], int totalVehiculos) {
+    if (totalVehiculos == 0) {
+        printf("Actualmente no hay ningún vehículo registrado.\n");
         mensajeSalida();
-    }else{
-    char placaBuscar[9]; // AAA-1234 + '\0'
-    do {
-        printf("Ingrese la placa del vehículo:\n");
-        scanf("%8s", placaBuscar); // sin & porque ya es un arreglo
-        aMayusculas(placaBuscar);
-        while (getchar() != '\n'); // limpia el buffer
-    } while (validarPlaca(placaBuscar) != 1); // válida solo si regresa 1
+        return;
+    }
 
+    char placaBuscar[40]; // Tamaño amplio para evitar desbordes
+    int valido = 0;
+
+    do {
+        printf("Ingrese la placa del vehículo (formato AAA-1234):\n");
+
+        // Leer línea completa
+        if (fgets(placaBuscar, sizeof(placaBuscar), stdin) == NULL) {
+            printf("Error leyendo la entrada.\n");
+            return;
+        }
+
+        // Eliminar salto de línea si existe
+        size_t len = strlen(placaBuscar);
+        if (len > 0 && placaBuscar[len - 1] == '\n') {
+            placaBuscar[len - 1] = '\0';
+        }
+
+        // Validar placa con tu función validarPlaca
+        if (validarPlaca(placaBuscar)) {
+            valido = 1;
+        } else {
+            printf("Placa inválida, inténtelo de nuevo.\n");
+        }
+    } while (!valido);
+
+    // Buscar la placa en el arreglo
     int encontrado = 0;
     for (int i = 0; i < totalVehiculos; i++) {
         if (strcmp(vehiculos[i].placa, placaBuscar) == 0) {
-            printf("Vehículo #%d encontrado...\n", i + 1);
-            printf("Placa del vehículo: %s\n", vehiculos[i].placa);
+            printf("Vehículo #%d encontrado:\n", i + 1);
+            printf("Placa: %s\n", vehiculos[i].placa);
             printf("Cédula del propietario: %s\n", vehiculos[i].cedula);
-            printf("Tipo del vehículo: %s\n", vehiculos[i].tipo);
-            printf("Año del vehículo: %d\n", vehiculos[i].anio);
-            printf("Avaluo del vehículo: %.2f\n", vehiculos[i].avaluo);
+            printf("Tipo: %s\n", vehiculos[i].tipo);
+            printf("Año: %d\n", vehiculos[i].anio);
+            printf("Avalúo: %.2f\n", vehiculos[i].avaluo);
             printf("*******************************************\n");
             encontrado = 1;
-            mensajeSalida();
+            break; // si solo quieres mostrar el primero encontrado
         }
     }
-    if (encontrado != 1) {
-        printf("El vehículo con placa %s no existe.\n", placaBuscar);
-        mensajeSalida();
+
+    if (!encontrado) {
+        printf("No se encontró ningún vehículo con la placa '%s'.\n", placaBuscar);
     }
-    }
+
+    mensajeSalida();
 }
 
 int revision() {
@@ -198,15 +218,21 @@ Vehiculo registroVehiculo() {
     {
         printf("Ingrese la placa del vehículo:\n");
         fgets(v.placa, sizeof(v.placa), stdin);
-        
-    } while (validarPlaca(v.placa) != 0);
+        size_t len = strlen(v.placa);
+        if (len > 0 && v.placa[len - 1] == '\n') {
+            v.placa[len - 1] = '\0';
+        }
+    } while (validarPlaca(v.placa) != 1);
 
     // Leer cédula
     do
     {
         printf("Ingrese el número de cédula del propietario:\n");
         fgets(v.cedula, sizeof(v.cedula), stdin);
-        limpiarSaltoLinea(v.cedula);
+        size_t len = strlen(v.cedula);
+        if (len > 0 && v.cedula[len - 1] == '\n') {
+            v.cedula[len - 1] = '\0';
+        }
     } while (validarCedula(v.cedula) != 1);
 
     // Seleccionar tipo de vehículo con validación
@@ -247,7 +273,7 @@ Vehiculo registroVehiculo() {
 	
     // Leer año del vehículo con validación mínima
     do {
-        printf("Ingrese el año del vehículo:\n");
+        printf("Ingrese el año del vehículo (1950 - 2025):\n");
         if (scanf("%d", &v.anio) != 1 || v.anio <= 1950) {
             while (getchar() != '\n');
             v.anio = 0;
@@ -263,7 +289,7 @@ Vehiculo registroVehiculo() {
             while (getchar() != '\n');
             printf("Error:Ingrese un valor correcto.");
         }
-    } while (v.avaluo <= 0);
+    } while (v.avaluo <= 0 || v.avaluo > 10000000.0);
     getchar();
 	
     // Región a la que pertenece el vehículo.
