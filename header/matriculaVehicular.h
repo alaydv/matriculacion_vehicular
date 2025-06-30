@@ -9,6 +9,7 @@ typedef struct {
     float avaluo;
     float multas;
     float recargoTipo;
+    float recargoAnio;
     float recargoRegion;
     int estaMatriculado; // 0 no matriculado, 1 matriculado
 } Vehiculo;
