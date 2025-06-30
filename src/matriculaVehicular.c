@@ -291,6 +291,12 @@ Vehiculo registroVehiculo() {
         }
     } while (v.avaluo <= 0 || v.avaluo > 10000000.0);
     getchar();
+	if (v.avaluo <=10000){
+		v.recargoAvaluo= 20.0f;}
+	else if (v.avaluo>10000 && v.avaluo<25000){
+		v.recargoAvaluo= 35.0f;}
+	else if (v.avaluo>25000){
+		v.recargoAvaluo= 50.0f;}
 	
     // Región a la que pertenece el vehículo.
     int region;
