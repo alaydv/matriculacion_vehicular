@@ -8,6 +8,7 @@ typedef struct {
     int anio;
     float avaluo;
     float multas;
+    float recargoAvaluo;
     float recargoTipo;
     float recargoAnio;
     float recargoRegion;
