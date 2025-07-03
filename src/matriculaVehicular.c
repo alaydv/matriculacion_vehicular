@@ -96,7 +96,7 @@ void generarComprobante(Vehiculo vehiculos[], int totalVehiculos) {
     }
 
     // Calcular total a pagar
-    float totalMatricula = v->multas + v->recargoTipo + v->recargoRegion;
+    float totalMatricula = v->multas + v->recargoTipo + v->recargoRegion + v->recargoAnio + v->recargoAvaluo;
 
     // Imprimir comprobante
     printf("\n========== COMPROBANTE DE MATRICULACIÓN ==========\n");
@@ -110,6 +110,8 @@ void generarComprobante(Vehiculo vehiculos[], int totalVehiculos) {
     printf("Multas pendientes      : %.2f\n", v->multas);
     printf("Impuesto al rodaje     : %.2f\n", v->recargoTipo);
     printf("Recargo por región     : %.2f\n", v->recargoRegion);
+    printf("Recargo por año(> 2020): %.2f\n", v->recargoAnio);
+    printf("Recargo por región     : %.2f\n", v->recargoAvaluo);
     printf("TOTAL A PAGAR          : %.2f\n", totalMatricula);
     printf("===========================================\n");
 
