@@ -58,7 +58,7 @@ int main() {
 			break;
 		case 6:
 			limpiarPantalla();
-			generarComprobante();
+			generarComprobante(vehiculos, contador);
 			break;
 		case 7:
 			printf("Saliendo......... Gracias!\n");

@@ -13,12 +13,14 @@ typedef struct {
     float recargoAnio;
     float recargoRegion;
     int estaMatriculado; // 0 no matriculado, 1 matriculado
+    int revisionesAnuales;
 } Vehiculo;
 
 Vehiculo registroVehiculo();
-void buscarVehiculoPorPlaca(Vehiculo vehiculos[], int totalVehiculos);
+Vehiculo* buscarVehiculoPorPlaca(Vehiculo vehiculos[], int totalVehiculos);
+void listarPorPlaca(Vehiculo vehiculos[], int totalVehiculos);
 void listarVehiculos(Vehiculo vehiculos[], int totalVehiculos);
-void generarComprobante();
+void generarComprobante(Vehiculo vehiculos[], int totalVehiculos);
 void listarVehiculosMatriculados(Vehiculo vehiculos[], int totalVehiculos);
 void procesoMatriculacion(Vehiculo vehiculos[], int totalVehiculos);
 

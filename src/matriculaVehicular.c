@@ -4,6 +4,7 @@
 #include "utilidades.h"
 #include <string.h>
 #include <stdio.h>
+#define MAX_REVISIONES_ANUALES 3
 
 //Función para vehiculos
 void listarVehiculos(Vehiculo vehiculos[], int totalVehiculos){
@@ -28,19 +29,22 @@ void listarVehiculos(Vehiculo vehiculos[], int totalVehiculos){
 }
 
 float verificarMultas(){
-    int opcion;
+    int opcion, validacion;
     float multa = 0.0;
     int tieneMultas;
     do
     {
         printf("\n¿Tiene multas de tránsito? (1 = Sí, 0 = No): ");
-        scanf("%d", &tieneMultas);
+        validacion = scanf(" %d", &tieneMultas);
+        while(getchar() != '\n');
         if (tieneMultas == 0)
         {
             return multa;
-        }else
+        }
+        if (tieneMultas == 1) 
         {
             do {
+                limpiarPantalla();
                 printf("\nSeleccione la infracción cometida:\n");
                 printf("1. Exceso de velocidad - $120.00\n");
                 printf("2. No uso de cinturón - $80.00\n");
@@ -49,7 +53,7 @@ float verificarMultas(){
                 printf("5. Finalizar\n");
                 printf("Opción: ");
                 scanf("%d", &opcion);
-                
+                while(getchar() != '\n');
                 switch (opcion) {
                 case 1:
                     multa += 120.00f;
@@ -66,73 +70,108 @@ float verificarMultas(){
                 case 5:
                     break;
                 default:
-                    printf("? Opción no válida.\n");
+                    printf("Error: Opción no válida.\n");
                 }
-            } while (opcion != 5);
+            } while (opcion != 5 && multa < 500.00f);
             return multa;
         }
     } while (tieneMultas != 0 && tieneMultas != 1);
     
 }
 
-void generarComprobante(){
-    printf("Proximamente..\n");
-}
+void generarComprobante(Vehiculo vehiculos[], int totalVehiculos) {
+    printf("\n\t-- GENERAR COMPROBANTE DE MATRICULACIÓN --\n");
 
-void buscarVehiculoPorPlaca(Vehiculo vehiculos[], int totalVehiculos) {
-    if (totalVehiculos == 0) {
-        printf("Actualmente no hay ningún vehículo registrado.\n");
+    Vehiculo *v = buscarVehiculoPorPlaca(vehiculos, totalVehiculos);
+
+    if (v == NULL) {
+        printf("No se pudo generar el comprobante. Vehículo no encontrado.\n");
+        return; // Importante: salir para evitar usar v
+    }
+
+    if (v->estaMatriculado != 1) {
+        printf("El vehículo debe pasar primero por el proceso de matriculación\n");
         mensajeSalida();
         return;
     }
 
-    char placaBuscar[40]; // Tamaño amplio para evitar desbordes
+    // Calcular total a pagar
+    float totalMatricula = v->multas + v->recargoTipo + v->recargoRegion;
+
+    // Imprimir comprobante
+    printf("\n========== COMPROBANTE DE MATRICULACIÓN ==========\n");
+    printf("Cédula del propietario : %s\n", v->cedula);
+    printf("Placa del vehículo     : %s\n", v->placa);
+    printf("Tipo de vehículo       : %s\n", v->tipo);
+    printf("Año del vehículo       : %d\n", v->anio);
+    printf("Avalúo del vehículo    : %.2f\n", v->avaluo);
+
+    printf("\n------------ VALORES A PAGAR ------------\n");
+    printf("Multas pendientes      : %.2f\n", v->multas);
+    printf("Impuesto al rodaje     : %.2f\n", v->recargoTipo);
+    printf("Recargo por región     : %.2f\n", v->recargoRegion);
+    printf("TOTAL A PAGAR          : %.2f\n", totalMatricula);
+    printf("===========================================\n");
+
+    mensajeSalida();
+}
+
+Vehiculo* buscarVehiculoPorPlaca(Vehiculo vehiculos[], int totalVehiculos) {
+    if (totalVehiculos == 0) {
+        printf("Actualmente no hay ningún vehículo registrado.\n");
+        mensajeSalida();
+        return NULL;
+    }
+
+    char placaBuscar[40];
     int valido = 0;
 
     do {
         printf("Ingrese la placa del vehículo (formato AAA-1234):\n");
 
-        // Leer línea completa
         if (fgets(placaBuscar, sizeof(placaBuscar), stdin) == NULL) {
             printf("Error leyendo la entrada.\n");
-            return;
+            return NULL;
         }
 
-        // Eliminar salto de línea si existe
+        // Eliminar el salto de línea
         size_t len = strlen(placaBuscar);
         if (len > 0 && placaBuscar[len - 1] == '\n') {
             placaBuscar[len - 1] = '\0';
         }
 
-        // Validar placa con tu función validarPlaca
         if (validarPlaca(placaBuscar)) {
             valido = 1;
         } else {
             printf("Placa inválida, inténtelo de nuevo.\n");
         }
+
     } while (!valido);
 
-    // Buscar la placa en el arreglo
-    int encontrado = 0;
     for (int i = 0; i < totalVehiculos; i++) {
         if (strcmp(vehiculos[i].placa, placaBuscar) == 0) {
-            printf("Vehículo #%d encontrado:\n", i + 1);
-            printf("Placa: %s\n", vehiculos[i].placa);
-            printf("Cédula del propietario: %s\n", vehiculos[i].cedula);
-            printf("Tipo: %s\n", vehiculos[i].tipo);
-            printf("Año: %d\n", vehiculos[i].anio);
-            printf("Avalúo: %.2f\n", vehiculos[i].avaluo);
-            printf("*******************************************\n");
-            encontrado = 1;
-            break; // si solo quieres mostrar el primero encontrado
+            return &vehiculos[i]; // Devuelve la dirección del vehículo encontrado
         }
     }
 
-    if (!encontrado) {
-        printf("No se encontró ningún vehículo con la placa '%s'.\n", placaBuscar);
+    printf("El vehículo con placa '%s' no fue encontrado.\n", placaBuscar);
+    mensajeSalida();
+    return NULL;
+}
+
+void mostrarDatosVehiculo(const Vehiculo* v) {
+    if (v == NULL) {
+        printf("Error: Vehículo no válido.\n");
+        return;
     }
 
-    mensajeSalida();
+    printf("\n========== DATOS DEL VEHÍCULO ==========\n");
+    printf("Cédula del propietario : %s\n", v->cedula);
+    printf("Placa del vehículo     : %s\n", v->placa);
+    printf("Tipo de vehículo       : %s\n", v->tipo);
+    printf("Año del vehículo       : %d\n", v->anio);
+    printf("Avalúo del vehículo    : %.2f\n", v->avaluo);
+    printf("========================================\n");
 }
 
 int revision() {
@@ -153,33 +192,42 @@ int revision() {
 }
 
 void procesoMatriculacion(Vehiculo vehiculos[], int totalVehiculos){
+    Vehiculo *v = buscarVehiculoPorPlaca(vehiculos, totalVehiculos);
+    printf("\n\t-- PROCESO DE MATRICULACIÓN --\n");
 
-    float multa;
-    int aprobacionRevision;
-    for (int i = 0; i < totalVehiculos; i++)
-    {
-    multa = verificarMultas();
-
-    if (multa != 0.0)
-    {
-        vehiculos[i].multas = multa;
-        printf("No puedes proceder con la revisión tienes una multa de: %.2f\n", multa);
+    if (totalVehiculos == 0) {
+        printf("No hay vehículos registrados.\n");
         mensajeSalida();
-    }else{
-        vehiculos[i].multas = multa;
-        aprobacionRevision = revision();
-        if (aprobacionRevision == 1){
-            vehiculos[i].estaMatriculado = aprobacionRevision;
-            printf("Operación concluida, su vehículo ha sido matriculado\n");
-            mensajeSalida();
-        }else{
-            vehiculos[i].estaMatriculado = aprobacionRevision;
-            printf("Operación concluida, su vehículo no ha sido matriculado\n");
-            mensajeSalida();
-        }
-        
+        return;
     }
+
+    if (v == NULL){
+        printf("No se pudo empezar el proceso de matriculación. Vehículo no encontrado.\n");
+        mensajeSalida();
+        return;
     }
+    v->revisionesAnuales++;
+    if (v->revisionesAnuales > MAX_REVISIONES_ANUALES)
+    {
+        printf("Se ha alcanzado el numero máximo de revisiones anuales\n");
+        mensajeSalida();
+        return;
+    }
+    printf("Las revisiones vehiculares son: %d\n", v->revisionesAnuales);
+    // Verificar multas
+    float multa = verificarMultas();
+    v->multas = multa;
+
+    if (multa > 0.0f) {
+        printf("No puedes proceder con la revisión, tienes multas pendientes: %.2f\n", multa);
+        mensajeSalida();
+        return;
+    }
+
+    // Revisión técnica
+    int aprobado = revision();
+    v->estaMatriculado = aprobado;
+
 }
 
 void listarVehiculosMatriculados(Vehiculo vehiculos[], int totalVehiculos){
@@ -216,7 +264,7 @@ Vehiculo registroVehiculo() {
     // Leer placa
     do
     {
-        printf("Ingrese la placa del vehículo:\n");
+        printf("Ingrese la placa del vehículo (AAA-1234):\n");
         fgets(v.placa, sizeof(v.placa), stdin);
         size_t len = strlen(v.placa);
         if (len > 0 && v.placa[len - 1] == '\n') {
@@ -331,5 +379,6 @@ switch (region) {
             v.recargoRegion = 5.0f;
             break;
     }
+    v.revisionesAnuales = 0;
     return v;
 }

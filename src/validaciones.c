@@ -66,7 +66,7 @@ int leerRespuestaSN(const char *pregunta) {
     int resultado;
 
     do {
-        printf("%s (si, es 1 / no, es 0): ", pregunta);
+        printf("%s (1 = sí / 0 = no): ", pregunta);
         resultado = scanf("%d", &respuesta);
 
         // Limpiar el buffer de entrada en caso de error o caracteres adicionales
