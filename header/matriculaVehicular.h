@@ -18,6 +18,7 @@ typedef struct {
 
 Vehiculo registroVehiculo();
 Vehiculo* buscarVehiculoPorPlaca(Vehiculo vehiculos[], int totalVehiculos);
+void mostrarVehiculoPorPlaca(Vehiculo vehiculos[], int totalVehiculos);
 void listarPorPlaca(Vehiculo vehiculos[], int totalVehiculos);
 void listarVehiculos(Vehiculo vehiculos[], int totalVehiculos);
 void generarComprobante(Vehiculo vehiculos[], int totalVehiculos);

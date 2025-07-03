@@ -161,6 +161,7 @@ Vehiculo* buscarVehiculoPorPlaca(Vehiculo vehiculos[], int totalVehiculos) {
     return NULL;
 }
 
+
 void mostrarDatosVehiculo(const Vehiculo* v) {
     if (v == NULL) {
         printf("Error: Vehículo no válido.\n");
@@ -174,6 +175,20 @@ void mostrarDatosVehiculo(const Vehiculo* v) {
     printf("Año del vehículo       : %d\n", v->anio);
     printf("Avalúo del vehículo    : %.2f\n", v->avaluo);
     printf("========================================\n");
+    mensajeSalida();
+}
+
+void mostrarVehiculoPorPlaca(Vehiculo vehiculos[], int totalVehiculos){
+    printf("\n\t-- BUSCADOR DE VEHICULO POR PLACA --\n");
+
+    Vehiculo *v = buscarVehiculoPorPlaca(vehiculos, totalVehiculos);
+
+    if (v == NULL) {
+        printf("No se pudo generar el comprobante. Vehículo no encontrado.\n");
+        return; // Importante: salir para evitar usar v
+    }
+
+    mostrarDatosVehiculo(v);
 }
 
 int revision() {

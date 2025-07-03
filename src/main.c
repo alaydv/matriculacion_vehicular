@@ -40,7 +40,7 @@ int main() {
 		}
 		case 2: {
 			limpiarPantalla();
-			buscarVehiculoPorPlaca(vehiculos, contador);
+			mostrarVehiculoPorPlaca(vehiculos, contador);
 			break;
 		}
 		case 3:
