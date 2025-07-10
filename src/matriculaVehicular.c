@@ -232,8 +232,6 @@ void procesoMatriculacion(Vehiculo vehiculos[], int totalVehiculos){
     {
         printf("Se ha alcanzado el numero máximo de revisiones anuales\n");
         mensajeSalida();
-        printf("Vehículo no matriculado.\n");
-        mensajeSalida();
         return;
     }
     printf("Las revisiones vehiculares son: %d\n", v->revisionesAnuales);
@@ -289,9 +287,16 @@ Vehiculo registroVehiculo() {
     {
         printf("Ingrese la placa del vehículo (AAA-1234):\n");
         fgets(v.placa, sizeof(v.placa), stdin);
+
+        // Eliminar salto de línea
         size_t len = strlen(v.placa);
         if (len > 0 && v.placa[len - 1] == '\n') {
             v.placa[len - 1] = '\0';
+        }
+
+        // Convertir primeros 3 caracteres a mayúsculas
+        for (int i = 0; i < 3 && v.placa[i] != '\0'; i++) {
+            v.placa[i] = toupper((unsigned char)v.placa[i]);
         }
     } while (validarPlaca(v.placa) != 1);
 

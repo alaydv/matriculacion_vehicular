@@ -6,6 +6,7 @@
 
 // Valida una placa: Formato AAA-1234
 int validarPlaca(const char *placa) {
+    
     int len = strlen(placa);
 
     // Rechazar longitudes inválidas
