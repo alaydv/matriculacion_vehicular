@@ -4,6 +4,7 @@
 #include "utilidades.h"
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h> 
 #define MAX_REVISIONES_ANUALES 3
 
 //Función para vehiculos
@@ -141,7 +142,10 @@ Vehiculo* buscarVehiculoPorPlaca(Vehiculo vehiculos[], int totalVehiculos) {
         if (len > 0 && placaBuscar[len - 1] == '\n') {
             placaBuscar[len - 1] = '\0';
         }
-
+ 	//Convertir a mayúsculas antes de validar si el usuario ingresa en minuscula
+    for (int i = 0; placaBuscar[i] != '\0'; i++) {
+        placaBuscar[i] = toupper((unsigned char)placaBuscar[i]); //unsigned cahr para quitar tildes o caracteres invalidos
+    }
         if (validarPlaca(placaBuscar)) {
             valido = 1;
         } else {
