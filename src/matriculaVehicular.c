@@ -232,6 +232,8 @@ void procesoMatriculacion(Vehiculo vehiculos[], int totalVehiculos){
     {
         printf("Se ha alcanzado el numero máximo de revisiones anuales\n");
         mensajeSalida();
+        printf("Vehículo no matriculado.\n");
+        mensajeSalida();
         return;
     }
     printf("Las revisiones vehiculares son: %d\n", v->revisionesAnuales);
