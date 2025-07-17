@@ -1,2 +1,6 @@
 
 erick|alay
+erick|1234
+claris|claris|2222
+b|2
+david|david|1234
