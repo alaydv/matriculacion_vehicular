@@ -29,13 +29,25 @@ int loginMenu(){
                 SignUser();
                 break;
             case 2:
-                limpiarPantalla();
-                accesoPermitido = LogUser();
+		limpiarPantalla();
+	 	int intentos=0;
+		  while (intentos < 3 && !accesoPermitido) {
+	        accesoPermitido = LogUser();
+	        if (!accesoPermitido) {
+	            intentos++;
+	            if (intentos < 3) {
+	                printf("Intento %d/3 fallido. Intente nuevamente.\n", intentos);
+	            } else {
+                printf("Ha superado el número máximo de intentos.\n");
+                mensajeSalida();
+                return 0;  // Simula que el usuario eligió la opcion 3 "Salir"
+            }
+        }     
                 break;
             case 3:
                 printf("Saliendo del sistema de usuarios...\n");
                 mensajeSalida();
-                return 0;  // <-- Aquí se termina completamente el programa
+                return 0;  // Termina completamente el programa
             default:
                 printf("Opción no válida. Intente de nuevo.\n");
         }
@@ -62,7 +74,8 @@ int main() {
     int opcion;
 
     if (!loginMenu()) {
-        return 0; // Finaliza si el usuario selecciona "Salir"
+	 printf("Finalizando el programa...\n");
+        return 0; // Finaliza si el usuario selecciona "Salir" o falla 3 intentos
     }
 
     do {
