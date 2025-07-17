@@ -37,7 +37,7 @@ void SignUser() {
     }
 
     // Escribir el usuario y contraseña en el archivo
-    fprintf(file, "%s %s\n", usuario, contrasenia);
+    fprintf(file, "%s|%s\n", usuario, contrasenia);
     fclose(file);
 
     printf("Usuario registrado exitosamente.\n");

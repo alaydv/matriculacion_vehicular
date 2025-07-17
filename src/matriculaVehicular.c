@@ -8,24 +8,35 @@
 #define MAX_REVISIONES_ANUALES 3
 
 //Función para vehiculos
-void listarVehiculos(Vehiculo vehiculos[], int totalVehiculos){
-
-    printf("\n\t-- Lista de todos los vehículos --\n");
-    if (totalVehiculos == 0)
-    {
-        printf("Actualmente no hay ningún vehículo registrado \n");
-    } else {
-        for (int i = 0; i < totalVehiculos; i++)
-        {
-            printf("\nVehículo número %d \n", i + 1);
-	        printf("Placa del vehículo: %s\n", vehiculos[i].placa);
-	        printf("Cédula del propietario: %s\n", vehiculos[i].cedula);
-	        printf("Tipo del vehículo: %s \n", vehiculos[i].tipo);
-        	printf("Año del vehículo: %d \n", vehiculos[i].anio);
-	        printf("Avaluo del vehículo: %.2f \n", vehiculos[i].avaluo);
-    	    printf("*******************************************\n");
-        }
+void listarVehiculosArchivo() {
+    FILE *file = fopen("../data/vehiculos.txt", "rb");
+    if (!file) {
+        printf("Error: no se pudo abrir el archivo.\n");
+        return;
     }
+    Vehiculo v;
+    int index = 1;
+    while (fread(&v, sizeof(Vehiculo), 1, file)) {
+        printf("\nVehículo número %d\n", index++);
+        printf("Placa: %s\nCédula: %s\nTipo: %s\nAño: %d\nAvaluo: %.2f\n", v.placa, v.cedula, v.tipo, v.anio, v.avaluo);
+    }
+    fclose(file);
+    mensajeSalida();
+}
+
+void mostrarDatosVehiculo(const Vehiculo* v) {
+    if (v == NULL) {
+        printf("Error: Vehículo no válido.\n");
+        return;
+    }
+
+    printf("\n========== DATOS DEL VEHÍCULO ==========\n");
+    printf("Cédula del propietario : %s\n", v->cedula);
+    printf("Placa del vehículo     : %s\n", v->placa);
+    printf("Tipo de vehículo       : %s\n", v->tipo);
+    printf("Año del vehículo       : %d\n", v->anio);
+    printf("Avalúo del vehículo    : %.2f\n", v->avaluo);
+    printf("========================================\n");
     mensajeSalida();
 }
 
@@ -80,120 +91,73 @@ float verificarMultas(){
     
 }
 
-void generarComprobante(Vehiculo vehiculos[], int totalVehiculos) {
-    printf("\n\t-- GENERAR COMPROBANTE DE MATRICULACIÓN --\n");
-
-    Vehiculo *v = buscarVehiculoPorPlaca(vehiculos, totalVehiculos);
-
-    if (v == NULL) {
-        printf("No se pudo generar el comprobante. Vehículo no encontrado.\n");
-        return; // Importante: salir para evitar usar v
-    }
-
-    if (v->estaMatriculado != 1) {
-        printf("El vehículo debe pasar primero por el proceso de matriculación\n");
+void generarComprobanteArchivo() {
+    Vehiculo v;
+    if (!buscarVehiculoPorPlacaArchivoLeer(&v)) {
+        printf("Vehículo no encontrado.\n");
         mensajeSalida();
         return;
     }
 
-    // Calcular total a pagar
-    float totalMatricula = v->multas + v->recargoTipo + v->recargoRegion + v->recargoAnio + v->recargoAvaluo;
+    if (v.estaMatriculado != 1) {
+        printf("El vehículo no está matriculado.\n");
+        mensajeSalida();
+        return;
+    }
 
-    // Imprimir comprobante
+    float total = v.multas + v.recargoTipo + v.recargoRegion + v.recargoAnio + v.recargoAvaluo;
+
     printf("\n========== COMPROBANTE DE MATRICULACIÓN ==========\n");
-    printf("Cédula del propietario : %s\n", v->cedula);
-    printf("Placa del vehículo     : %s\n", v->placa);
-    printf("Tipo de vehículo       : %s\n", v->tipo);
-    printf("Año del vehículo       : %d\n", v->anio);
-    printf("Avalúo del vehículo    : %.2f\n", v->avaluo);
+    printf("Placa: %s\nCédula: %s\nTotal a pagar: %.2f\n", v.placa, v.cedula, total);
 
-    printf("\n------------ VALORES A PAGAR ------------\n");
-    printf("Multas pendientes      : %.2f\n", v->multas);
-    printf("Impuesto al rodaje     : %.2f\n", v->recargoTipo);
-    printf("Recargo por región     : %.2f\n", v->recargoRegion);
-    printf("Recargo por año(> 2020): %.2f\n", v->recargoAnio);
-    printf("Recargo por región     : %.2f\n", v->recargoAvaluo);
-    printf("TOTAL A PAGAR          : %.2f\n", totalMatricula);
-    printf("===========================================\n");
-
+    FILE *comp = fopen("../data/comprobantes.txt", "a");
+    if (comp) {
+        fprintf(comp, "Placa: %s | Cédula: %s | Total: %.2f\n", v.placa, v.cedula, total);
+        fclose(comp);
+        printf("\nComprobante generado correctamente.\n");
+    } else {
+        printf("Error creando comprobante.\n");
+    }
     mensajeSalida();
 }
 
-Vehiculo* buscarVehiculoPorPlaca(Vehiculo vehiculos[], int totalVehiculos) {
-    if (totalVehiculos == 0) {
-        printf("Actualmente no hay ningún vehículo registrado.\n");
-        mensajeSalida();
-        return NULL;
-    }
-
+int buscarVehiculoPorPlacaArchivoLeer(Vehiculo *encontrado) {
     char placaBuscar[40];
-    int valido = 0;
-
-    do {
-        printf("Ingrese la placa del vehículo (formato AAA-1234):\n");
-
-        if (fgets(placaBuscar, sizeof(placaBuscar), stdin) == NULL) {
-            printf("Error leyendo la entrada.\n");
-            return NULL;
-        }
-
-        // Eliminar el salto de línea
-        size_t len = strlen(placaBuscar);
-        if (len > 0 && placaBuscar[len - 1] == '\n') {
-            placaBuscar[len - 1] = '\0';
-        }
- 	//Convertir a mayúsculas antes de validar si el usuario ingresa en minuscula
-    for (int i = 0; placaBuscar[i] != '\0'; i++) {
-        placaBuscar[i] = toupper((unsigned char)placaBuscar[i]); //unsigned cahr para quitar tildes o caracteres invalidos
-    }
-        if (validarPlaca(placaBuscar)) {
-            valido = 1;
-        } else {
-            printf("Placa inválida, inténtelo de nuevo.\n");
-        }
-
-    } while (!valido);
-
-    for (int i = 0; i < totalVehiculos; i++) {
-        if (strcmp(vehiculos[i].placa, placaBuscar) == 0) {
-            return &vehiculos[i]; // Devuelve la dirección del vehículo encontrado
-        }
+    printf("Ingrese la placa a buscar: ");
+    fgets(placaBuscar, sizeof(placaBuscar), stdin);
+    placaBuscar[strcspn(placaBuscar, "\n")] = 0;
+    // Convertir primeros 3 caracteres a mayúsculas
+    for (int i = 0; i < 3 && placaBuscar[i] != '\0'; i++) {
+        placaBuscar[i] = toupper((unsigned char)placaBuscar[i]);
     }
 
-    printf("El vehículo con placa '%s' no fue encontrado.\n", placaBuscar);
-    mensajeSalida();
-    return NULL;
+    FILE *file = fopen("../data/vehiculos.txt", "rb");
+    if (!file) {
+        printf("Error al abrir archivo.\n");
+        return 0;
+    }
+    Vehiculo v;
+    while (fread(&v, sizeof(Vehiculo), 1, file)) {
+        if (strcmp(v.placa, placaBuscar) == 0) {
+            *encontrado = v;
+            fclose(file);
+            return 1;
+        }
+    }
+    fclose(file);
+    return 0;
 }
 
-
-void mostrarDatosVehiculo(const Vehiculo* v) {
-    if (v == NULL) {
-        printf("Error: Vehículo no válido.\n");
-        return;
+void buscarVehiculoPorPlacaArchivo() {
+    Vehiculo v;
+    if (buscarVehiculoPorPlacaArchivoLeer(&v)) {
+        mostrarDatosVehiculo(&v);
+    } else {
+        printf("Vehículo no encontrado.\n");
+        mensajeSalida();
     }
-
-    printf("\n========== DATOS DEL VEHÍCULO ==========\n");
-    printf("Cédula del propietario : %s\n", v->cedula);
-    printf("Placa del vehículo     : %s\n", v->placa);
-    printf("Tipo de vehículo       : %s\n", v->tipo);
-    printf("Año del vehículo       : %d\n", v->anio);
-    printf("Avalúo del vehículo    : %.2f\n", v->avaluo);
-    printf("========================================\n");
-    mensajeSalida();
 }
 
-void mostrarVehiculoPorPlaca(Vehiculo vehiculos[], int totalVehiculos){
-    printf("\n\t-- BUSCADOR DE VEHICULO POR PLACA --\n");
-
-    Vehiculo *v = buscarVehiculoPorPlaca(vehiculos, totalVehiculos);
-
-    if (v == NULL) {
-        printf("No se pudo generar el comprobante. Vehículo no encontrado.\n");
-        return; // Importante: salir para evitar usar v
-    }
-
-    mostrarDatosVehiculo(v);
-}
 
 int revision() {
     printf("\n\t-- REVISIÓN TÉCNICA DEL VEHÍCULO --\n");
@@ -212,65 +176,87 @@ int revision() {
     }
 }
 
-void procesoMatriculacion(Vehiculo vehiculos[], int totalVehiculos){
-    Vehiculo *v = buscarVehiculoPorPlaca(vehiculos, totalVehiculos);
-    printf("\n\t-- PROCESO DE MATRICULACIÓN --\n");
-
-    if (totalVehiculos == 0) {
-        printf("No hay vehículos registrados.\n");
-        mensajeSalida();
+void procesoMatriculacionArchivo() {
+    FILE *file = fopen("../data/vehiculos.txt", "rb+");
+    if (!file) {
+        printf("Error al abrir archivo de vehículos.\n");
         return;
     }
 
-    if (v == NULL){
-        printf("No se pudo empezar el proceso de matriculación. Vehículo no encontrado.\n");
-        mensajeSalida();
-        return;
-    }
-    v->revisionesAnuales++;
-    if (v->revisionesAnuales > MAX_REVISIONES_ANUALES)
-    {
-        printf("Se ha alcanzado el numero máximo de revisiones anuales\n");
-        mensajeSalida();
-        return;
-    }
-    printf("Las revisiones vehiculares son: %d\n", v->revisionesAnuales);
-    // Verificar multas
-    float multa = verificarMultas();
-    v->multas = multa;
+    Vehiculo v;
+    char placaBuscar[40];
+    printf("Ingrese la placa del vehículo a matricular: ");
+    fgets(placaBuscar, sizeof(placaBuscar), stdin);
+    placaBuscar[strcspn(placaBuscar, "\n")] = '\0';
 
-    if (multa > 0.0f) {
-        printf("No puedes proceder con la revisión, tienes multas pendientes: %.2f\n", multa);
-        mensajeSalida();
-        return;
-    }
+    int encontrado = 0;
+    long pos;
 
-    // Revisión técnica
-    int aprobado = revision();
-    v->estaMatriculado = aprobado;
-
-}
-
-void listarVehiculosMatriculados(Vehiculo vehiculos[], int totalVehiculos){
-    printf("\n\t-- Lista de todos los vehículos Matriculados--\n");
-    if (totalVehiculos == 0)
-    {
-        printf("Actualmente no hay ningún vehículo registrado \n");
-    } else {
-        for (int i = 0; i < totalVehiculos; i++)
-        {
-            if (vehiculos[i].estaMatriculado == 1)
-            {
-                printf("\nVehículo número %d \n", i + 1);
-                printf("Placa del vehículo: %s", vehiculos[i].placa);
-                printf("Cédula del propietario: %s", vehiculos[i].cedula);
-                printf("Tipo del vehículo: %s \n", vehiculos[i].tipo);
-                printf("Año del vehículo: %d \n", vehiculos[i].anio);
-                printf("Avaluo del vehículo: %.2f \n", vehiculos[i].avaluo);
-                printf("*******************************************\n");
-            }
+    while (fread(&v, sizeof(Vehiculo), 1, file)) {
+        if (strcmp(v.placa, placaBuscar) == 0) {
+            encontrado = 1;
+            pos = ftell(file) - sizeof(Vehiculo);
+            break;
         }
     }
+
+    if (!encontrado) {
+        printf("Vehículo no encontrado.\n");
+        fclose(file);
+        mensajeSalida();
+        return;
+    }
+
+    v.revisionesAnuales++;
+    if (v.revisionesAnuales > 3) {
+        printf("Número máximo de revisiones alcanzadas.\n");
+        fclose(file);
+        mensajeSalida();
+        return;
+    }
+
+    printf("Número de revisiones: %d\n", v.revisionesAnuales);
+    v.multas = verificarMultas();
+
+    if (v.multas > 0.0f) {
+        printf("No puedes matricular, tienes multas: %.2f\n", v.multas);
+        fclose(file);
+        mensajeSalida();
+        return;
+    }
+
+    int aprobado = revision();
+    v.estaMatriculado = aprobado;
+
+    fseek(file, pos, SEEK_SET);
+    fwrite(&v, sizeof(Vehiculo), 1, file);
+
+    printf("\nProceso de matriculación completado.\n");
+    fclose(file);
+    mensajeSalida();
+}
+
+void listarVehiculosMatriculadosArchivo() {
+    FILE *file = fopen("../data/vehiculos.txt", "rb");
+    if (!file) {
+        printf("Error al abrir archivo.\n");
+        return;
+    }
+
+    Vehiculo v;
+    int index = 1, encontrados = 0;
+    while (fread(&v, sizeof(Vehiculo), 1, file)) {
+        if (v.estaMatriculado == 1) {
+            printf("\nVehículo %d\n", index++);
+            printf("Placa: %s\nTipo: %s\nAvaluo: %.2f\n", v.placa, v.tipo, v.avaluo);
+            encontrados++;
+        }
+    }
+
+    if (encontrados == 0)
+        printf("\nNo hay vehículos matriculados.\n");
+
+    fclose(file);
     mensajeSalida();
 }
 
@@ -409,4 +395,17 @@ switch (region) {
     }
     v.revisionesAnuales = 0;
     return v;
+}
+
+void registrarVehiculoArchivo() {
+    Vehiculo v = registroVehiculo();
+    FILE *file = fopen("../data/vehiculos.txt", "ab"); // modo append binario
+    if (file == NULL) {
+        printf("Error al abrir el archivo de vehículos.\n");
+        return;
+    }
+    fwrite(&v, sizeof(Vehiculo), 1, file);
+    fclose(file);
+    printf("\nVehículo registrado exitosamente.\n");
+    mensajeSalida();
 }

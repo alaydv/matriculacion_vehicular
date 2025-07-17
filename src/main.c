@@ -59,8 +59,7 @@ void mostrarMenu() {
 
 //Función principal
 int main() {
-    Vehiculo vehiculos[MAX_USERS];
-    int opcion, contador = 0;
+    int opcion;
 
     if (!loginMenu()) {
         return 0; // Finaliza si el usuario selecciona "Salir"
@@ -71,34 +70,31 @@ int main() {
         mostrarMenu();
         scanf("%d", &opcion);
         while (getchar() != '\n');
+
         switch (opcion) {
-            case 1: {
+            case 1:
                 limpiarPantalla();
-                Vehiculo v = registroVehiculo();
-                vehiculos[contador++] = v;
-                printf("\nVehículo registrado exitosamente.\n");
-                mensajeSalida();
+                registrarVehiculoArchivo();
                 break;
-            }
             case 2:
                 limpiarPantalla();
-                mostrarVehiculoPorPlaca(vehiculos, contador);
+                buscarVehiculoPorPlacaArchivo();
                 break;
             case 3:
                 limpiarPantalla();
-                listarVehiculos(vehiculos, contador);
+                listarVehiculosArchivo();
                 break;
             case 4:
                 limpiarPantalla();
-                procesoMatriculacion(vehiculos, contador);
+                procesoMatriculacionArchivo();
                 break;
             case 5:
                 limpiarPantalla();
-                listarVehiculosMatriculados(vehiculos, contador);
+                listarVehiculosMatriculadosArchivo();
                 break;
             case 6:
                 limpiarPantalla();
-                generarComprobante(vehiculos, contador);
+                generarComprobanteArchivo();
                 break;
             case 7:
                 printf("Saliendo......... Gracias!\n");
