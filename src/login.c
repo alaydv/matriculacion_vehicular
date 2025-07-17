@@ -57,6 +57,7 @@ int LogUser() {
     char contrasenia[MAX_CONTRASENIA];    // Buffer para la contraseña ingresada
     char usuario_arch[MAX_USUARIO];       // Buffer para leer usuarios del archivo
     char contrasenia_arch[MAX_CONTRASENIA]; // Buffer para leer contraseñas del archivo
+    char linea[100];                      // Nueva línea a leer del archivo
     int encontrado = 0;                   // Bandera para indicar si se encontró el usuario
 
     // Interfaz para el inicio de sesión
@@ -77,7 +78,8 @@ int LogUser() {
     }
 
     // Leer el archivo línea por línea buscando coincidencias
-    while (fscanf(file, "%s %s", usuario_arch, contrasenia_arch) != EOF) {
+     while (fgets(linea, sizeof(linea), file) != NULL) {
+        sscanf(linea, "%[^|]|%s", usuario_arch, contrasenia_arch);
         if (strcmp(usuario, usuario_arch) == 0 && strcmp(contrasenia, contrasenia_arch) == 0) {
             encontrado = 1;  // Usuario y contraseña coinciden
             break;
