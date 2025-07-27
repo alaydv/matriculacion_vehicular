@@ -1,8 +1,11 @@
 #include "validaciones.h"
+#include "matriculaVehicular.h" 
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+
+#define ARCHIVO_COMPROBANTES "../data/comprobantes.txt"
 
 // Valida una placa: Formato AAA-1234
 int validarPlaca(const char *placa) {
@@ -80,4 +83,37 @@ int leerRespuestaSN(const char *pregunta) {
         }
 
     } while (1);
+}
+
+//Funciones para evitar registrar vehículos con la misma placa
+int placaExisteArchivo(const char *placaBuscar) {
+    FILE *file = fopen("../data/vehiculos.txt", "rb");
+    if (!file) return 0;  // Si no existe el archivo, no hay duplicados
+
+    Vehiculo v;
+    while (fread(&v, sizeof(Vehiculo), 1, file)) {
+        if (strcmp(v.placa, placaBuscar) == 0) {
+            fclose(file);
+            return 1;  // Placa encontrada
+        }
+    }
+    fclose(file);
+    return 0;  // Placa no encontrada
+}
+
+int comprobanteExisteVehiculo(const char *placa, Vehiculo *resultado) {
+    FILE *file = fopen("../data/comprobantes.txt", "r");
+    if (!file) return 0;
+
+    char linea[256];
+    while (fgets(linea, sizeof(linea), file)) {
+        // Busca si la línea contiene la placa
+        if (strstr(linea, placa)) {
+            fclose(file);
+            return 1;
+        }
+    }
+
+    fclose(file);
+    return 0;
 }

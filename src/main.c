@@ -42,7 +42,8 @@ int loginMenu(){
                 mensajeSalida();
                 return 0;  // Simula que el usuario eligió la opcion 3 "Salir"
             }
-        }     
+        }
+    }     
                 break;
             case 3:
                 printf("Saliendo del sistema de usuarios...\n");
@@ -55,6 +56,7 @@ int loginMenu(){
 
     return 1; // Acceso exitoso
 }
+
 
 // Se muestra al usuario el men
 void mostrarMenu() {
@@ -74,8 +76,8 @@ int main() {
     int opcion;
 
     if (!loginMenu()) {
-	 printf("Finalizando el programa...\n");
-        return 0; // Finaliza si el usuario selecciona "Salir" o falla 3 intentos
+	printf("Finalizando el programa...\n");
+    return 0; // Finaliza si el usuario selecciona "Salir" o falla 3 intentos
     }
 
     do {
@@ -114,6 +116,7 @@ int main() {
                 break;
             default:
                 printf("Opción no válida, por favor intente de nuevo.\n");
+                mensajeSalida();
         }
 
     } while (opcion != 7);

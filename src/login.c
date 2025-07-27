@@ -5,6 +5,7 @@
 #include "login.h"
 
 #define ARCHIVO_USUARIOS "../data/usuarios.txt"  // Ruta del archivo donde se almacenan los usuarios
+#define MAX_LINEA 256
 
 /**
  * @brief Registra un nuevo usuario en el sistema
@@ -14,29 +15,55 @@
  * 
  * @return void
  */
-void SignUser() {
-    char usuario[MAX_USUARIO];            // Buffer para almacenar el nombre de usuario
-    char contrasenia[MAX_CONTRASENIA];    // Buffer para almacenar la contraseña
 
-    // Interfaz para el registro de usuario
+// Verifica si un nombre de usuario ya está registrado
+int usuarioExiste(const char *usuario) {
+    FILE *file = fopen(ARCHIVO_USUARIOS, "r");
+    if (file == NULL) {
+    return 0; // Archivo no existe, por lo tanto el usuario no existe
+    }
+
+    char linea[MAX_LINEA];
+    while (fgets(linea, sizeof(linea), file)) {
+        char nombreUsuario[MAX_USUARIO];
+        sscanf(linea, "%[^|]", nombreUsuario); // Extrae hasta el '|'
+
+        if (strcmp(nombreUsuario, usuario) == 0) {
+            fclose(file);
+            return 1; // Usuario encontrado
+        }
+    }
+
+    fclose(file);
+    return 0; // Usuario no encontrado
+}
+
+void SignUser() {
+    char usuario[MAX_USUARIO];
+    char contrasenia[MAX_CONTRASENIA];
+
     printf("---- REGISTRO DE USUARIO ----\n");
     printf("Ingrese un nombre de usuario: ");
     fgets(usuario, MAX_USUARIO, stdin);
-    usuario[strcspn(usuario, "\n")] = '\0'; // Eliminar el carácter de nueva línea
+    usuario[strcspn(usuario, "\n")] = '\0';  // Elimina el salto de línea
 
-    printf("Ingrese una contraseña: ");
-    fgets(contrasenia, MAX_CONTRASENIA, stdin);
-    contrasenia[strcspn(contrasenia, "\n")] = '\0'; // Eliminar el carácter de nueva línea
-
-    // Abrir el archivo en modo append (añadir al final)
-    FILE *file = fopen(ARCHIVO_USUARIOS, "a");
-    if (file == NULL) {
-        printf("Error al abrir el archivo de usuarios\n");
+    if (usuarioExiste(usuario)) {
+        printf("El nombre de usuario ya está registrado. Intente con otro.\n");
         mensajeSalida();
         return;
     }
 
-    // Escribir el usuario y contraseña en el archivo
+    printf("Ingrese una contraseña: ");
+    fgets(contrasenia, MAX_CONTRASENIA, stdin);
+    contrasenia[strcspn(contrasenia, "\n")] = '\0';
+
+    FILE *file = fopen(ARCHIVO_USUARIOS, "a");
+    if (file == NULL) {
+        printf("Error al abrir el archivo de usuarios.\n");
+        mensajeSalida();
+        return;
+    }
+
     fprintf(file, "%s|%s\n", usuario, contrasenia);
     fclose(file);
 

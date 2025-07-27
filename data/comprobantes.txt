@@ -1,4 +1,1 @@
-Placa: AAA-1234 | Cédula: 1234567890 | Total: 25.00
-Placa: AAA-1234 | Cédula: 1234567890 | Total: 25.00
-Placa: AAA-1234 | Cédula: 1234567890 | Total: 25.00
-Placa: ABC-1111 | Cédula: 1750276428 | Total: 25.00
+Placa: AAA-1234 | Cédula: 1234567890 | Total: 40.00
