@@ -11,5 +11,5 @@ void limpiarPantalla(){
 }
 void mensajeSalida(){
     printf("Presiona enter para continuar ...\n");
-    getchar();
+    while (getchar() != '\n'); // Limpia el buffer hasta que se presione ENTE
 }
