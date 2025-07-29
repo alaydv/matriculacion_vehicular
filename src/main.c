@@ -33,10 +33,11 @@ int loginMenu(){
 	 	int intentos=0;
 		  while (intentos < 3 && !accesoPermitido) {
 	        accesoPermitido = LogUser();
+            limpiarPantalla();
 	        if (!accesoPermitido) {
 	            intentos++;
 	            if (intentos < 3) {
-	                printf("Intento %d/3 fallido. Intente nuevamente.\n", intentos);
+	                printf("Intento %d/3 fallido. Intente nuevamente.\n", intentos+1);
 	            } else {
                 printf("Ha superado el número máximo de intentos.\n");
                 mensajeSalida();
@@ -112,7 +113,7 @@ int main() {
                 generarComprobanteArchivo();
                 break;
             case 7:
-                printf("Saliendo......... Gracias!\n");
+                printf("Cerrando sesión.........\nVuelva Pronto!\n");
                 break;
             default:
                 printf("Opción no válida, por favor intente de nuevo.\n");

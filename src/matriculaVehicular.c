@@ -18,14 +18,19 @@ void listarVehiculosArchivo() {
 
     Vehiculo v;
     int index = 1;
+    int hayVehiculos = 0;
     printf("\n-------------------------------------------------------------");
     printf("\n%-5s %-10s %-15s %-10s %-6s %-10s\n", 
            "N°", "Placa", "Cédula", "Tipo", "Año", "Avalúo");
     printf("-------------------------------------------------------------\n");
 
     while (fread(&v, sizeof(Vehiculo), 1, file)) {
+        hayVehiculos = 1;
         printf("%-3d %-10s %-15s %-10s %-6d $%-9.2f\n", 
                index++, v.placa, v.cedula, v.tipo, v.anio, v.avaluo);
+    }
+    if (!hayVehiculos) {
+        printf("No hay vehículos registrados en el sistema.\n");
     }
     printf("-------------------------------------------------------------\n");
 
@@ -67,6 +72,7 @@ float verificarMultas(){
             do {
                 limpiarPantalla();
                 printf("\nSeleccione la infracción cometida:\n");
+                printf("Multas: $%.2f\n", multa);
                 printf("1. Exceso de velocidad - $120.00\n");
                 printf("2. No uso de cinturón - $80.00\n");
                 printf("3. Mal parqueo - $60.00\n");
@@ -188,6 +194,7 @@ void buscarVehiculoPorPlacaArchivo() {
 
 
 int revision() {
+    limpiarPantalla();
     printf("\n\t-- REVISIÓN TÉCNICA DEL VEHÍCULO --\n");
 
     int frenos = leerRespuestaSN("¿Los frenos están operables?");
@@ -324,6 +331,10 @@ Vehiculo registroVehiculo() {
         for (int i = 0; i < 3 && v.placa[i] != '\0'; i++) {
             v.placa[i] = toupper((unsigned char)v.placa[i]);
         }
+
+        if (validarPlaca(v.placa) != 1) {
+            printf("Error: Formato de placa inválido. Debe ser AAA-1234.\n");
+        }
     } while (validarPlaca(v.placa) != 1);
 
     // Leer cédula
@@ -334,6 +345,10 @@ Vehiculo registroVehiculo() {
         size_t len = strlen(v.cedula);
         if (len > 0 && v.cedula[len - 1] == '\n') {
             v.cedula[len - 1] = '\0';
+        }
+
+        if (validarCedula(v.cedula) != 1) {
+            printf("Error: La cédula debe tener 10 dígitos válidos y un código de provincia correcto (01-24).\n");
         }
     } while (validarCedula(v.cedula) != 1);
 
@@ -376,10 +391,11 @@ Vehiculo registroVehiculo() {
     // Leer año del vehículo con validación mínima
     do {
         printf("Ingrese el año del vehículo (1950 - 2025):\n");
-        if (scanf("%d", &v.anio) != 1 || v.anio <= 1950) {
+        if (scanf("%d", &v.anio) != 1 || v.anio <= 1950 || v.anio > 2025) {
             while (getchar() != '\n');
             v.anio = 0;
-            printf("Error:Ingrese un valor correcto.\n");
+            printf("Error:Ingrese un valor entre 1950 - 2025.\n");
+            mensajeSalida();
         }
     } while (v.anio < 1950 || v.anio > 2025);
     getchar();
@@ -389,12 +405,12 @@ Vehiculo registroVehiculo() {
 
     // Leer avalúo con validación positiva
     do {
-        printf("Ingrese el avalúo del vehículo (positivo):\n");
-        if (scanf("%f", &v.avaluo) != 1) {
+        printf("Ingrese el avalúo del vehículo (positivo > $1000):\n");
+        if (scanf("%f", &v.avaluo) != 1 || v.avaluo < 1000 || v.avaluo > 10000000.0) {
             while (getchar() != '\n');
-            printf("Error:Ingrese un valor correcto.");
+            printf("Error:Ingrese un valor correcto, superior a $1000.\n");
         }
-    } while (v.avaluo <= 0 || v.avaluo > 10000000.0);
+    } while (v.avaluo < 1000 || v.avaluo > 10000000.0);
     getchar();
 	if (v.avaluo <=10000){
 		v.recargoAvaluo= 20.0f;}
@@ -417,7 +433,7 @@ do {
 	getchar();  
 					
 	if (resultadoRegion != 1 || (region != 1 && region!= 2 &&region!=3)) {
-	printf("Entrada inválida: Intente de nuevo.\n");
+	printf("Entrada inválida: Intente de nuevo con 1 - 3.\n");
 	}
 					
 	} while (region != 1 && region != 2 &&region!=3);

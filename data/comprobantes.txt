@@ -1,1 +1,2 @@
 Placa: AAA-1234 | Cédula: 1234567890 | Total: 40.00
+Placa: ASD-1234 | Cédula: 0987654321 | Total: 50.00
